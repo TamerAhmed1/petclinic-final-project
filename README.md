@@ -25,3 +25,22 @@ Or you can run it from Maven directly using the Spring Boot Maven plugin. If you
 
 ## In case you find a bug/suggested improvement for Spring Petclinic
 Our issue tracker is available here: https://github.com/spring-projects/spring-petclinic/issues
+## Running Petclinic using Docker
+
+Inside the Dockerfile, create the last line as:
+
+ENTRYPOINT [ "sh", "-c", "java -Dspring.profiles.active=${ENV} -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
+
+Create a docker image and push it to the Docker Hub
+
+And while running the docker:
+
+```
+docker run --env ENV=mysql -d -p 8080:8080 <image id> 
+```
+This way, environment variable gets local as value and passes to Dockerfile when we bring up a container.
+
+You can also pass on the Spring Profile as an environment variable at the run time as:
+
+```
+$ docker run -e "SPRING_PROFILES_ACTIVE=prod" -p 8080:8080 -t ibuchh/spring-petclinic
